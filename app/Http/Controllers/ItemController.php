@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Item;
 use Illuminate\Http\Request;
 
 class ItemController extends Controller
@@ -12,7 +13,8 @@ class ItemController extends Controller
      */
     public function index()
     {
-        //
+        $items = Item::paginate(5);
+        return view('items.index',compact('brands'));
     }
 
     /**
@@ -20,7 +22,7 @@ class ItemController extends Controller
      */
     public function create()
     {
-        //
+        return view('items.create');
     }
 
     /**
@@ -28,7 +30,9 @@ class ItemController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate(['code' => 'required','name' => 'required']);
+        Item::create($request->all());
+        return redirect()->route('items.index')->with('success','Item created.');
     }
 
     /**
@@ -42,24 +46,27 @@ class ItemController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Item $item)
     {
-        //
+        return view('items.edit',compact('item'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Item $item)
     {
-        //
+        $request->validate(['code' => 'required','name'=>'required']);
+        Item::create($request->all());
+        return redirect()->route('items.index')->with('success','Item Updated.');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Item $item)
     {
-        //
+        $item->delete();
+        return redirect()->route('items.index')->with('success','Item deleted.');
     }
 }
